@@ -1,0 +1,5 @@
+{
+  "extName": { "message": "X 收藏瀑布流", "description": "扩展名称" },
+  "extDescription": { "message": "非官方工具：把你在 X 上的收藏同步到本地，用瀑布流浏览封面和标题，并按作者、类型、日期筛选。", "description": "扩展说明，最多 132 字符" },
+  "actionTitle": { "message": "X 收藏瀑布流", "description": "工具栏按钮提示" }
+}

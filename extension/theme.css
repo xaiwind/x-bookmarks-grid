@@ -1,0 +1,87 @@
+/* Shared look for the manager page and the popup: warm paper, forest ink, brass trim.
+   Loaded last, so it sets the shapes, type and interaction states on top of the page styles. */
+@font-face {
+  font-family:"Manrope"; font-style:normal; font-weight:400 800; font-display:swap;
+  src:url(../fonts/manrope-latin.woff2) format("woff2");
+  unicode-range:U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+.manager-body, .popup {
+  --forest:#2f4a2a; --forest-hover:#253c21; --on-forest:#fbf6ec; --olive:#5b6b2e;
+  --brass:#b98a3e; --brass-soft:#f1e2c2; --maple:#c9561f; --on-maple:#fffdf8;
+  --heading-from:#1f3a1f; --heading-to:#6b7a3a;
+  --ease:cubic-bezier(.22,1,.36,1); --fast:.3s;
+  font-family:"Manrope", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Noto Sans SC", system-ui, sans-serif;
+  -webkit-font-smoothing:antialiased; text-rendering:optimizeLegibility;
+}
+.popup { --ink:var(--popup-ink); --muted:var(--popup-muted); --line:var(--popup-line); --paper:var(--popup-paper); --surface:var(--popup-surface); }
+@media (prefers-color-scheme:dark) {
+  .manager-body, .popup {
+    --forest:#a9bf6a; --forest-hover:#bfd47e; --on-forest:#131209; --olive:#b7c47f;
+    --brass:#d8ac5f; --brass-soft:#272727; --maple:#d8ac5f; --on-maple:#131209;
+    --heading-from:#ffffff; --heading-to:#9b9b9b;
+  }
+}
+.manager-body input, .popup input { accent-color:var(--forest); }
+.manager-body ::selection, .popup ::selection { background:var(--brass-soft); color:var(--ink); }
+
+/* Headings: the one gradient, on the page title only. */
+.manager-body .manager-header h1, .popup h1 {
+  width:fit-content; max-width:100%; font-weight:700; letter-spacing:-.02em;
+  background:linear-gradient(90deg, var(--heading-from), var(--heading-to)); -webkit-background-clip:text; background-clip:text; color:transparent;
+}
+.library-heading h2 { font-weight:700; letter-spacing:-.01em; }
+.eyebrow, .popup-eyebrow { display:inline-flex; align-items:center; gap:8px; color:var(--olive); font-family:ui-monospace, SFMono-Regular, Menlo, monospace; font-weight:600; letter-spacing:.12em; }
+.eyebrow::before, .popup-eyebrow::before { content:""; flex:none; width:16px; height:2px; border-radius:999px; background:var(--brass); }
+.brand-mark, .popup-brand { border-radius:999px; background:var(--forest); color:var(--on-forest); box-shadow:0 0 0 1px var(--brass); }
+.header-metrics strong, .popup .stats strong { font-weight:700; letter-spacing:-.01em; }
+
+/* Buttons are pills; fields are softly rounded. */
+.manager-body .toolbar button, .manager-body .library-controls button, .manager-body .library-controls select, .manager-body .edit-actions button, .manager-body .empty-action, .popup button {
+  border-radius:999px;
+  transition:transform var(--fast) var(--ease), background-color var(--fast) var(--ease), border-color var(--fast) var(--ease), color var(--fast) var(--ease);
+}
+.manager-body .toolbar input:not(#query), .manager-body .toolbar select, .popup input:not([type=checkbox]) { border-radius:12px; }
+.manager-body .toolbar-actions-row > button { padding-inline:16px; }
+.search-wrap { padding:0 16px; border-radius:999px; }
+.manager-body button:hover:not(:disabled), .manager-body select:hover, .popup button:hover:not(:disabled) { filter:none; }
+.manager-body .toolbar-actions-row > button:hover:not(:disabled), .manager-body .library-controls button:hover, .manager-body .library-controls select:hover, .manager-body .edit-actions button:hover, .popup button:hover:not(:disabled) { border-color:var(--brass); transform:translateY(-1px); }
+.manager-body .toolbar-actions-row > button:active:not(:disabled), .manager-body .edit-actions button:active, .popup button:active:not(:disabled) { transform:scale(.98); }
+
+.manager-body .toolbar button.primary, .manager-body .edit-actions button.primary, .manager-body .empty-action, .popup button.primary { border-color:var(--forest); background:var(--forest); color:var(--on-forest); font-weight:700; }
+.manager-body .toolbar button.primary:hover:not(:disabled), .manager-body .edit-actions button.primary:hover, .manager-body .empty-action:hover, .popup button.primary:hover:not(:disabled) { border-color:var(--forest-hover); background:var(--forest-hover); }
+.popup button.danger { border-color:var(--line); }
+.popup button.link-button, .popup button.link-button:hover:not(:disabled) { border:0; border-radius:0; color:var(--forest); transform:none; }
+
+/* Filter chips: the selected one is marked the way the current section is in a nav bar. */
+.manager-body .toolbar .type-filter { border:1px solid transparent; }
+.manager-body .toolbar .type-filter:hover { background:var(--brass-soft); }
+.manager-body .toolbar .type-filter.active { border-color:var(--brass); background:var(--brass-soft); color:var(--ink); font-weight:700; }
+.manager-body .toolbar .viral-toggle.active { border-color:var(--maple); background:var(--maple); color:var(--on-maple); }
+
+/* Cards */
+.manager-body .bookmark-card { border-radius:20px; box-shadow:none; transition:transform .5s var(--ease), border-color var(--fast) var(--ease), box-shadow var(--fast) var(--ease); }
+.manager-body .bookmark-card:hover { transform:translateY(-4px); border-color:var(--brass); box-shadow:0 14px 30px #6b432914; }
+.manager-body .card-title a:hover, .manager-body .author-link:hover { color:var(--forest); }
+.manager-body .empty-state { border-radius:24px; }
+.empty-icon { border-radius:999px; }
+.popup .stats div, .popup .sync-settings { border-radius:16px; }
+.card-menu, .author-list { border-radius:16px; }
+.edit-dialog { border-radius:24px; }
+.toast { border-radius:999px; padding-inline:20px; }
+.manager-body .toast button { border-radius:999px; }
+.sync-progress-bar, .popup .sync-progress-bar { background:var(--forest); }
+.manager-body .toolbar .link-button, .manager-body .link-button { color:var(--forest); }
+
+/* Focus */
+.manager-body button:focus-visible, .manager-body a:focus-visible, .manager-body select:focus-visible, .popup button:focus-visible, .popup input:focus-visible, .popup summary:focus-visible { outline:2px solid var(--brass); outline-offset:3px; }
+
+/* Language switch (manager header and popup header). */
+.manager-body .language-toggle, .popup .language-toggle { flex:none; width:auto; min-width:52px; min-height:0; height:34px; padding:0 12px; border:1px solid var(--line); border-radius:999px; background:transparent; color:var(--ink); font-size:12px; font-weight:700; cursor:pointer; }
+.manager-body .language-toggle:hover, .popup .language-toggle:hover:not(:disabled) { border-color:var(--brass); background:var(--surface); transform:translateY(-1px); }
+.popup .language-toggle { align-self:flex-start; margin-left:auto; height:30px; min-width:46px; padding:0 10px; }
+
+@media (prefers-reduced-motion:reduce) {
+  .manager-body .bookmark-card, .manager-body button, .manager-body select, .popup button { transition:none; }
+  .manager-body .bookmark-card:hover, .manager-body button:hover, .popup button:hover { transform:none; }
+}

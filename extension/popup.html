@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>X 收藏瀑布流</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="popup.css">
+    <link rel="stylesheet" href="theme.css">
+  </head>
+  <body class="popup">
+    <header><div class="popup-brand">✳</div><div><span class="popup-eyebrow">YOUR PERSONAL LIBRARY</span><h1>X 收藏</h1><p>把好内容留给未来的自己。</p></div><button type="button" id="languageToggle" class="language-toggle"></button></header>
+    <main>
+      <section class="stats">
+        <div><strong id="sourceTotal">—</strong><span id="sourceLabel">X 收藏总数</span></div>
+        <div><strong id="recordCount">0</strong><span>已同步到插件</span></div>
+        <div><strong id="coverCount">0</strong><span>有封面</span></div>
+      </section>
+      <p id="sourceCountHint" class="muted"></p>
+      <button id="openManager" class="primary">打开我的收藏 <span aria-hidden="true">↗</span></button>
+      <button id="importBatch">＋ 同步全部收藏</button>
+      <div id="syncProgress" class="sync-progress" hidden>
+        <div class="sync-progress-track" role="progressbar" aria-label="同步进度"><div id="syncProgressBar" class="sync-progress-bar"></div></div>
+        <button type="button" id="stopSync" class="link-button">停止</button>
+      </div>
+      <p id="status" class="muted" aria-live="polite">正在读取插件收藏…</p>
+      <details class="more-actions"><summary>同步与设置</summary>
+        <div class="more-actions-content">
+          <button id="fullRescan" title="从头到尾重新读取全部收藏；不会删除任何本地数据">完整重扫（刷新封面与标题）</button>
+          <button id="openX">打开 X 书签页</button>
+          <section class="sync-settings">
+            <label class="check"><input id="autoSyncEnabled" type="checkbox"><span>自动同步（打开插件时和每天定时）</span></label>
+            <label>同步时间<input id="autoSyncTime" type="time" value="01:00"></label>
+            <label>时区<input id="autoSyncTimeZone" placeholder="Asia/Taipei"></label>
+          </section>
+          <p id="autoSyncStatus" class="muted"></p>
+          <button id="resetAndReimport" class="danger">清空本地数据并重建（慎用）</button>
+        </div>
+      </details>
+    </main>
+    <script type="module" src="popup.js"></script>
+  </body>
+</html>

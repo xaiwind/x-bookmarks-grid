@@ -1,0 +1,66 @@
+{
+  "manifest_version": 3,
+  "name": "__MSG_extName__",
+  "version": "1.0.0",
+  "default_locale": "en",
+  "description": "__MSG_extDescription__",
+  "icons": {
+    "16": "icons/icon-16.png",
+    "32": "icons/icon-32.png",
+    "48": "icons/icon-48.png",
+    "128": "icons/icon-128.png"
+  },
+  "key": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAx5W9qvt9zA9yHtUXz9bS8nb1XKCFWUiaKpRgsWPErxV0/CkaOMTTI7SlIWCZvgE0a6G6/046FVeOjVP9GLO7M9lFxKQ8+AoDPwwnmw9RChShv6UnZvGyl34C6iCQAEChYLyzPy7yRGxc+Y6J0wl2YUACqvcwTPEtVqRRFbmaBbHCUneg/AcWdgFyljNPiOgbJVZot20NDk9ywL2LfmBgD75nYC455Qb0zddveqvtngMTKH6uAmDu2NfJNkh94+hSLA31BafaXh7zt45n/VHxexxSL33vUT11LTzr4JANhIruxJDBD7sy0gaJ0tegK54gT5GJw7GeHDhg4cVZfH+xtwIDAQAB",
+  "minimum_chrome_version": "111",
+  "permissions": [
+    "alarms",
+    "scripting",
+    "storage",
+    "unlimitedStorage"
+  ],
+  "host_permissions": [
+    "https://x.com/*",
+    "https://twitter.com/*"
+  ],
+  "action": {
+    "default_popup": "extension/popup.html",
+    "default_title": "__MSG_actionTitle__",
+    "default_icon": {
+      "16": "icons/icon-16.png",
+      "32": "icons/icon-32.png"
+    }
+  },
+  "options_page": "extension/manager.html",
+  "content_scripts": [
+    {
+      "matches": [
+        "https://x.com/i/bookmarks*",
+        "https://twitter.com/i/bookmarks*",
+        "https://x.com/i/history*",
+        "https://twitter.com/i/history*"
+      ],
+      "js": [
+        "extension/page-hook.js"
+      ],
+      "run_at": "document_start",
+      "world": "MAIN"
+    },
+    {
+      "matches": [
+        "https://x.com/i/bookmarks*",
+        "https://twitter.com/i/bookmarks*",
+        "https://x.com/i/history*",
+        "https://twitter.com/i/history*"
+      ],
+      "js": [
+        "extension/api-bridge.js",
+        "extension/content.js"
+      ],
+      "run_at": "document_idle"
+    }
+  ],
+  "background": {
+    "service_worker": "extension/background.js",
+    "type": "module"
+  }
+}

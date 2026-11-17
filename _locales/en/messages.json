@@ -1,0 +1,14 @@
+{
+  "extName": {
+    "message": "X Bookmarks Grid",
+    "description": "Extension name"
+  },
+  "extDescription": {
+    "message": "Unofficial tool: sync your X bookmarks into a local library and browse them in a grid, filtered by author, type and date.",
+    "description": "Extension description, at most 132 characters"
+  },
+  "actionTitle": {
+    "message": "X Bookmarks Grid",
+    "description": "Toolbar button tooltip"
+  }
+}

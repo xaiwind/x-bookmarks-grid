@@ -1,0 +1,40 @@
+.popup { --popup-ink:#1f2a1c; --popup-muted:#6b705f; --popup-line:#e7dcc6; --popup-paper:#fbf6ec; --popup-surface:#fffdf8; width:340px; background:var(--popup-paper); color:var(--popup-ink); }
+.popup header { display:flex; align-items:center; gap:12px; padding:20px 20px 16px; background:transparent; border:0; }
+.popup-brand { display:grid; place-items:center; flex:none; width:42px; height:42px; border-radius:13px; color:#fbf6ec; background:#2f4a2a; font-size:24px; }
+.popup-eyebrow { color:#5b6b2e; font-size:9px; font-weight:750; letter-spacing:.14em; }
+.popup h1 { margin:3px 0 2px; font-size:20px; letter-spacing:-.03em; }
+.popup header p { margin:0; color:var(--popup-muted); font-size:12px; }
+.popup main { display:grid; gap:9px; padding:0 20px 20px; }
+.popup .stats { grid-template-columns:repeat(2,minmax(0,1fr)); gap:8px; margin:3px 0 5px; }
+.popup .stats div { padding:12px 14px; border:1px solid var(--popup-line); border-radius:12px; background:var(--popup-surface); }
+.popup .stats strong { font-size:23px; line-height:1.1; }
+.popup .stats span { display:block; margin-top:5px; color:var(--popup-muted); font-size:11px; }
+.popup button, .popup input:not([type=checkbox]) { min-height:39px; border:1px solid var(--popup-line); border-radius:9px; background:var(--popup-surface); color:var(--popup-ink); font-size:12px; }
+.popup button { font-weight:650; }
+.popup button.primary { display:flex; justify-content:center; gap:8px; align-items:center; min-height:44px; background:#2f4a2a; border-color:#2f4a2a; color:white; }
+.popup button.danger { color:#a44d40; background:transparent; border-color:#ead7d1; }
+.popup button:hover:not(:disabled) { filter:brightness(.97); }
+.popup button:focus-visible, .popup input:focus-visible, .popup summary:focus-visible { outline:3px solid #b98a3e; outline-offset:2px; }
+.popup #status { min-height:18px; margin:2px 2px 4px; color:var(--popup-muted); line-height:1.5; }
+.more-actions { border-top:1px solid var(--popup-line); }
+.more-actions summary { padding:12px 2px 5px; color:#4d5646; font-size:12px; font-weight:650; cursor:pointer; }
+.more-actions-content { display:grid; gap:8px; padding-top:8px; }
+.popup .sync-settings { display:grid; gap:9px; padding:12px; border:1px solid var(--popup-line); border-radius:10px; background:var(--popup-surface); }
+.popup .sync-settings label { color:var(--popup-muted); font-size:11px; }
+.popup .sync-settings .check { color:var(--popup-ink); font-size:12px; }
+.popup #autoSyncStatus { margin:0 2px; line-height:1.45; }
+@media (prefers-color-scheme:dark) { .popup { --popup-ink:#f6eedd; --popup-muted:#9a9384; --popup-line:#313131; --popup-paper:#131209; --popup-surface:#1f1f1f; } .popup button.primary { background:#a9bf6a; border-color:#a9bf6a; color:#131209; } .popup button.danger { color:#f1a69a; border-color:#69433c; } .more-actions summary { color:#cfc6b2; } }
+.popup .stats { grid-template-columns:repeat(3,minmax(0,1fr)); }
+.popup .stats div { padding:10px 8px; }
+.popup .stats strong { font-size:18px; overflow-wrap:anywhere; }
+.popup #sourceCountHint { margin:0 2px 5px; color:var(--popup-muted); line-height:1.45; }
+
+.popup .sync-progress { display:flex; align-items:center; gap:10px; margin:2px 2px 0; }
+.popup .sync-progress[hidden] { display:none; }
+.popup .sync-progress-track { flex:1; height:5px; overflow:hidden; border-radius:999px; background:#efe6d3; }
+.popup .sync-progress-bar { width:0; height:100%; border-radius:999px; background:#2f4a2a; transition:width .4s ease; }
+.popup .sync-progress.indeterminate .sync-progress-bar { width:35%; animation:popup-sync-slide 1.4s ease-in-out infinite; }
+@keyframes popup-sync-slide { from { transform:translateX(-100%); } to { transform:translateX(290%); } }
+.popup button.link-button { width:auto; min-height:0; padding:0; border:0; background:none; color:#2f4a2a; font-size:12px; text-decoration:underline; }
+@media (prefers-reduced-motion:reduce) { .popup .sync-progress.indeterminate .sync-progress-bar { animation:none; width:100%; opacity:.5; } }
+@media (prefers-color-scheme:dark) { .popup .sync-progress-track { background:#272727; } .popup .sync-progress-bar { background:#a9bf6a; } .popup button.link-button { color:#a9bf6a; } }
