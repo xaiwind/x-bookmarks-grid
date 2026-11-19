@@ -10,6 +10,8 @@ import { createAuthorPicker } from "./author-picker.js";
 import { cardKey, createMasonry, handleImageError } from "./manager-view.js";
 import { initLanguage, localizeDocument, t, tr } from "../src/i18n.js";
 import { setupLanguageToggle } from "./language-toggle.js";
+import { createPostDownloader } from "./post-download.js";
+import { clearedDownloadMark, isDownloaded } from "../src/download-core.js";
 
 initLanguage();
 localizeDocument();
@@ -26,7 +28,7 @@ const STORAGE_KEYS = ["lastSync", "lastAutoSync", "batchImportState", "syncProgr
 const $ = (selector) => document.querySelector(selector);
 const elements = {
   query: $("#query"), author: $("#author"), authorList: $("#authorList"), authorClear: $("#authorClear"), fromDate: $("#fromDate"), toDate: $("#toDate"),
-  hasLinks: $("#hasLinks"), viralToggle: $("#viralToggle"), sort: $("#sort"), clearFilters: $("#clearFilters"), typeFilters: [...document.querySelectorAll(".type-filter")],
+  hasLinks: $("#hasLinks"), downloaded: $("#downloaded"), viralToggle: $("#viralToggle"), sort: $("#sort"), clearFilters: $("#clearFilters"), typeFilters: [...document.querySelectorAll(".type-filter")],
   syncNow: $("#syncNow"), fullRescan: $("#fullRescan"), exportBackup: $("#exportBackup"), importBackup: $("#importBackup"), backupFile: $("#backupFile"), stopSync: $("#stopSync"), status: $("#status"), count: $("#count"),
   sourceTotal: $("#sourceTotal"), sourceLabel: $("#sourceLabel"), syncedTotal: $("#syncedTotal"),
   sourceCountHint: $("#sourceCountHint"), titleHint: $("#titleHint"), progress: $("#syncProgress"), progressBar: $("#syncProgressBar"), rows: $("#rows"),
@@ -37,7 +39,11 @@ const authorPicker = createAuthorPicker({ input: elements.author, list: elements
 const ALL_AUTHORS = Number.MAX_SAFE_INTEGER;
 const toast = createToast($("#toast"));
 const editDialog = createEditDialog({ dialog: $("#editDialog"), onSave: saveEdit });
-createCardMenu({ menu: $("#cardMenu"), cards: elements.rows, onAction: handleCardAction });
+createCardMenu({ menu: $("#cardMenu"), cards: elements.rows, onAction: handleCardAction, describe: describeMenuItem });
+const downloader = createPostDownloader({
+  dialog: $("#downloadDialog"), duplicateDialog: $("#duplicateDialog"), chip: $("#downloadLocation"),
+  prepare: preparePostFile, onDownloaded: saveDownloadMark, setStatus: setStatusOverride, toast,
+});
 let records = [];
 let storage = {};
 let activeType = "all";
@@ -64,7 +70,7 @@ elements.sort.addEventListener("change", () => {
   render({ reset: true });
 });
 elements.viralToggle.addEventListener("click", () => setViralOnly(!viralOnly));
-for (const element of [elements.query, elements.author, elements.fromDate, elements.toDate, elements.hasLinks]) {
+for (const element of [elements.query, elements.author, elements.fromDate, elements.toDate, elements.hasLinks, elements.downloaded]) {
   element.addEventListener("input", scheduleFilterRender);
   element.addEventListener("change", scheduleFilterRender);
 }
@@ -172,11 +178,11 @@ function renderAuthors() {
 }
 
 function currentFilters() {
-  return { query: elements.query.value, author: authorPicker.value(), fromDate: elements.fromDate.value, toDate: elements.toDate.value, hasLinks: elements.hasLinks.value, minViews: viralOnly ? VIRAL_VIEW_COUNT : "", type: activeType };
+  return { query: elements.query.value, author: authorPicker.value(), fromDate: elements.fromDate.value, toDate: elements.toDate.value, hasLinks: elements.hasLinks.value, downloaded: elements.downloaded.value, minViews: viralOnly ? VIRAL_VIEW_COUNT : "", type: activeType };
 }
 
 function hasActiveFilters(filters) {
-  return Boolean(filters.query.trim() || filters.author.trim() || filters.fromDate || filters.toDate || filters.hasLinks || filters.minViews || filters.type !== "all");
+  return Boolean(filters.query.trim() || filters.author.trim() || filters.fromDate || filters.toDate || filters.hasLinks || filters.downloaded || filters.minViews || filters.type !== "all");
 }
 
 function scheduleFilterRender() {
@@ -206,7 +212,7 @@ function renderViralToggle() {
 }
 
 function clearFilters() {
-  for (const element of [elements.query, elements.fromDate, elements.toDate, elements.hasLinks]) element.value = "";
+  for (const element of [elements.query, elements.fromDate, elements.toDate, elements.hasLinks, elements.downloaded]) element.value = "";
   viralOnly = false;
   renderViralToggle();
   authorPicker.select("");
@@ -287,7 +293,8 @@ function handleCardAction(action, id) {
   if (action === "open") window.open(record.url, "_blank", "noopener");
   if (action === "sync") syncOne(record);
   if (action === "edit") editDialog.open(record, displayTitle(record), !needsTitleBackfill({ ...record, untitled: false, hidden: false }));
-  if (action === "download") downloadOne(record);
+  if (action === "download") downloader.download(record);
+  if (action === "unmark-download") unmarkDownload(record);
   if (action === "delete") deleteOne(record);
 }
 
@@ -323,15 +330,48 @@ async function saveEdit(id, { title, note }) {
   setStatusOverride(t("已保存修改。"));
 }
 
-async function downloadOne(record) {
+async function preparePostFile(record) {
+  const result = await askBackground({ type: "READ_POST_MARKDOWN", id: record.id }, tr`正在打开原帖读取正文：${displayTitle(record)}`);
+  const body = result.ok ? result.markdown : "";
+  const title = record.titleEdited ? record.title : result.title || displayTitle(record);
+  return {
+    filename: buildPostFilename(record, title),
+    markdown: buildPostMarkdown({ ...record, isArticle: Boolean(record.isArticle || result.isArticle) }, { body, title, media: Array.isArray(result.media) ? result.media : [], layout: Array.isArray(result.layout) ? result.layout : [], views: result.views }),
+    title,
+    note: result.ok ? "" : tr`（没有读到正文：${result.message || t("原因未知")}，文件只包含标题、链接和封面。）`,
+  };
+}
+
+function describeMenuItem(item, id) {
+  const downloaded = isDownloaded(records.find((record) => record.id === id));
+  if (item.action === "unmark-download") return downloaded ? item : null;
+  if (item.action === "download" && downloaded) return { label: "再次下载", hint: "已下载过，可选择覆盖或另存一份" };
+  return item;
+}
+
+async function saveDownloadMark(record, mark) {
+  await patchRecord(record.id, mark);
+  await loadLocalRecords();
+}
+
+async function unmarkDownload(record) {
+  const previous = { downloadedAt: record.downloadedAt || "", download: record.download || null };
   try {
-    const result = await askBackground({ type: "READ_POST_MARKDOWN", id: record.id }, tr`正在打开原帖读取正文：${displayTitle(record)}`);
-    const body = result.ok ? result.markdown : "";
-    const title = record.titleEdited ? record.title : result.title || displayTitle(record);
-    downloadTextFile(buildPostFilename(record, title), buildPostMarkdown(record, { body, title }));
-    setStatusOverride(result.ok ? tr`已下载：${title}` : tr`没有读到正文（${result.message || t("原因未知")}），已下载只含标题、链接和封面的文件。`);
+    await patchRecord(record.id, clearedDownloadMark());
+    await loadLocalRecords();
+    toast.show(tr`已取消下载标记：${displayTitle(record)}`, {
+      label: t("撤销"),
+      run: async () => {
+        try {
+          await patchRecord(record.id, previous);
+          await loadLocalRecords();
+        } catch (error) {
+          setStatusOverride(tr`撤销失败：${error.message}`);
+        }
+      },
+    });
   } catch (error) {
-    setStatusOverride(tr`下载失败：${error.message}`);
+    setStatusOverride(tr`取消下载标记失败：${error.message}`);
   }
 }
 

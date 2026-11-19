@@ -37,7 +37,7 @@ async function openManager({ records = [{ id: "1", title: "已有旧收藏", ima
   };
   const context = vm.createContext({ t, tr, initLanguage, localizeDocument, setupLanguageToggle() {},
     document, chrome, URL, setTimeout, clearTimeout, setInterval: () => 0, window: { scrollTo() {} }, localStorage: { getItem: () => null, setItem() {} },
-    ...managerCore, describeSyncProgress, hasCompletedFullSync, SYNC_ENGINE_VERSION, needsTitleBackfill: () => false, displayTitle: (record) => record.title, patchRecord: async () => ({}), createCardMenu: () => ({}), createEditDialog: () => ({}), createToast: () => ({ show() {} }), downloadTextFile() {}, buildPostFilename: () => '', mergeLibraryEntries: async () => ({ added: 0, updated: 0 }), buildBackup: () => '', mergeBackupRecord: (a, b) => a || b, parseBackup: () => ({ records: [], skipped: 0 }), buildPostMarkdown: () => '',
+    ...managerCore, describeSyncProgress, hasCompletedFullSync, SYNC_ENGINE_VERSION, needsTitleBackfill: () => false, displayTitle: (record) => record.title, patchRecord: async () => ({}), createCardMenu: () => ({}), createEditDialog: () => ({}), createToast: () => ({ show() {} }), createPostDownloader: () => ({ download() {}, openSettings() {} }), clearedDownloadMark: () => ({}), isDownloaded: () => false, downloadTextFile() {}, buildPostFilename: () => '', mergeLibraryEntries: async () => ({ added: 0, updated: 0 }), buildBackup: () => '', mergeBackupRecord: (a, b) => a || b, parseBackup: () => ({ records: [], skipped: 0 }), buildPostMarkdown: () => '',
     listRecords: async () => records,
     getStorage: async () => state,
     createMasonry: () => ({ setItems: (items) => { shown.items = items; }, showMessage: (html) => { shown.message = html; } }),

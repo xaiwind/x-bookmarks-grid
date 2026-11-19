@@ -168,6 +168,36 @@ kbd { flex:none; padding:1px 6px; border:1px solid #e7dcc6; border-radius:5px; b
 .toast[hidden] { display:none; }
 .toast span { min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
 .manager-body .toast button { flex:none; width:auto; min-height:0; padding:4px 10px; border:1px solid #ffffff55; border-radius:7px; background:transparent; color:#f1e2c2; font-size:13px; font-weight:700; cursor:pointer; }
+/* Download location: toolbar chip and the folder dialog. */
+.manager-body .toolbar .download-location { display:inline-flex; align-items:center; gap:6px; width:auto; max-width:220px; padding-inline:12px; }
+.download-location [data-download-label] { min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.download-intro { margin:-6px 0 14px; color:var(--muted); font-size:13px; line-height:1.55; }
+.download-current { display:flex; align-items:center; gap:12px; padding:12px 14px; border:1px solid var(--line); border-radius:12px; background:var(--paper); }
+.download-current-icon { display:grid; place-items:center; flex:none; width:36px; height:36px; border-radius:10px; background:#f4ecdc; font-size:18px; }
+.download-current div { display:grid; gap:2px; min-width:0; }
+.download-current strong { overflow:hidden; font-size:14px; text-overflow:ellipsis; white-space:nowrap; }
+.download-current small { color:var(--muted); font-size:12px; line-height:1.45; }
+.download-current small:empty { display:none; }
+.download-choices { display:flex; flex-wrap:wrap; gap:8px; margin-top:14px; }
+.manager-body .download-choices button { flex:1 1 180px; width:auto; min-height:38px; padding:8px 14px; border:1px solid var(--line); border-radius:9px; background:var(--surface); color:var(--ink); font-size:13px; cursor:pointer; }
+.manager-body .download-choices button.primary { border-color:var(--forest, #2f4a2a); background:var(--forest, #2f4a2a); color:var(--on-forest, #fff); font-weight:700; }
+.manager-body .download-choices button:hover:not(:disabled) { border-color:var(--brass, #b98a3e); }
+.manager-body .download-choices button.primary:hover:not(:disabled) { background:var(--forest-hover, #3b5c35); border-color:var(--forest-hover, #3b5c35); }
+.manager-body .download-choices button:disabled { opacity:.6; cursor:default; }
+.edit-dialog label.download-option { display:flex; align-items:flex-start; gap:9px; margin:16px 0 0; color:var(--ink); font-size:13px; font-weight:600; cursor:pointer; }
+.download-option[hidden] { display:none !important; }
+.download-option input { flex:none; width:16px; height:16px; margin:2px 0 0; accent-color:var(--forest, #2f4a2a); }
+.download-option small { display:block; margin-top:2px; color:var(--muted); font-size:11px; font-weight:400; }
+.download-select { justify-content:space-between; align-items:center !important; }
+.manager-body .download-select select { flex:none; width:auto; min-height:34px; padding:5px 10px; border:1px solid var(--line); border-radius:8px; background:var(--paper); color:var(--ink); font:inherit; font-size:12px; font-weight:400; }
+.duplicate-note { margin:14px 0 0; }
+.duplicate-actions { flex-wrap:wrap; margin-top:16px; }
+.duplicate-actions button[hidden] { display:none; }
+.duplicate-dialog .download-current-icon { color:var(--forest, #2f4a2a); font-weight:700; }
+.card-kicker:has(.card-downloaded) { justify-content:flex-start; }
+.card-kicker:has(.card-downloaded) .card-views { margin-left:auto; }
+.card-kicker:has(.card-views) .card-downloaded { margin-left:0; }
+.manager-body .card-downloaded { flex:none; margin-left:auto; padding:1px 8px; border-radius:999px; background:#e7eedb; color:var(--forest, #2f4a2a); font-size:11px; font-weight:700; letter-spacing:0; white-space:nowrap; cursor:default; }
 @media (hover:none) { .manager-body .card-more { opacity:1; } }
 @media (prefers-color-scheme:dark) {
   .manager-body .card-more { color:#9a9384; } .manager-body .card-more:hover { background:#272727; }
@@ -175,6 +205,7 @@ kbd { flex:none; padding:1px 6px; border:1px solid #e7dcc6; border-radius:5px; b
   .manager-body .card-menu-item.danger { color:#f1a69a; } .manager-body .card-menu-item.danger:hover, .manager-body .card-menu-item.danger:focus-visible { background:#4a2d29; }
   .manager-body .edit-actions button.primary { border-color:#a9bf6a; background:#a9bf6a; color:#131209; }
   .edit-error { color:#f1a69a; } .manager-body .card-note { border-color:#5c5338; }
+  .download-current-icon { background:#272727; } .manager-body .card-downloaded { background:#2c3320; }
   .toast { background:#f6eedd; color:#131209; } .manager-body .toast button { border-color:#13120955; color:#2f4a2a; }
 }
 

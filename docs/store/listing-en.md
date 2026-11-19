@@ -22,6 +22,7 @@ The package to upload is the same zip for every language: `npm run package`.
     ● Filters that don't overlap: Articles / Video / Images / Text / Untitled — the counts add up to the total. Combine any of them with "1M+ views".
     ● Search titles, authors, links and your own notes; @name finds an author.
     ● Right-click a card to open the post, sync just that post, edit its title and note, download it as Markdown, or delete it from the library (with undo).
+    ● Download into your own folder, such as an Obsidian vault, with photos and videos saved alongside. Downloaded posts are marked, and downloading again lets you replace or keep both.
     ● Backup: export and import your whole library as one file.
     ● Interface in English and Chinese: follows your browser language, and you can switch with one click.
 
@@ -51,7 +52,8 @@ The package to upload is the same zip for every language: `npm run package`.
 | `unlimitedStorage` | The bookmark library is kept in local IndexedDB. Users with many bookmarks can exceed the default quota, and the permission prevents the browser from evicting the user's library when disk space is low. |
 | `alarms` | Runs the optional once-a-day sync of new bookmarks at a time the user chooses. |
 | `scripting` | Runs the reader script in X pages that the extension itself opened: to read the bookmark list and, when the user asks, the title or text of a single post. |
-| Host permissions `x.com`, `twitter.com` | Bookmarks only exist on X. The extension reads the user's own bookmarks on X's bookmark and post pages. It accesses no other site. |
+| Host permissions `x.com`, `twitter.com` | Bookmarks only exist on X. The extension reads the user's own bookmarks on X's bookmark and post pages. |
+| Host permissions `pbs.twimg.com`, `video.twimg.com` | These are X's image and video servers. When the user downloads a bookmark, the extension saves that post's photos and videos into a folder the user chose, so they can be viewed offline. They are accessed only when the user clicks Download. No other site is accessed. |
 
 **Remote code**: No. All code is in the package.
 

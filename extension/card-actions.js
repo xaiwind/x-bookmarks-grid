@@ -6,7 +6,8 @@ const MENU_ITEMS = [
   { action: "open", label: "打开文章", hint: "在新标签页打开原帖" },
   { action: "sync", label: "同步文章", hint: "访问原帖，更新标题和封面" },
   { action: "edit", label: "编辑文章", hint: "修改标题、添加备注" },
-  { action: "download", label: "下载文章", hint: "保存为 Markdown 文件" },
+  { action: "download", label: "下载文章", hint: "保存为 Markdown 到你选的文件夹" },
+  { action: "unmark-download", label: "取消已下载标记", hint: "让这篇重新显示为未下载，不会删除文件" },
   { action: "delete", label: "删除文章", hint: "从插件里移除，X 上不受影响", danger: true },
 ];
 const MENU_MARGIN = 8;
@@ -17,11 +18,19 @@ const TOAST_DURATION_MS = 7000;
  * @param {HTMLElement} params.menu empty container for the menu
  * @param {HTMLElement} params.cards element that contains the cards
  * @param {(action: string, id: string) => void} params.onAction
+ * @param {(item: { action: string, label: string, hint: string }, id: string) => ({ label: string, hint: string } | null)} [params.describe]
+ *   adjusts an item for the card it opens on; null hides it
  */
-export function createCardMenu({ menu, cards, onAction }) {
+export function createCardMenu({ menu, cards, onAction, describe = (item) => item }) {
   let targetId = "";
-  menu.innerHTML = MENU_ITEMS.map((item) => `<button type="button" role="menuitem" class="card-menu-item${item.danger ? " danger" : ""}" data-menu-action="${item.action}"><span>${t(item.label)}</span><small>${t(item.hint)}</small></button>`).join("");
   const items = () => [...menu.querySelectorAll(".card-menu-item")];
+
+  function renderItems(id) {
+    menu.innerHTML = MENU_ITEMS.map((item) => ({ item, shown: describe(item, id) }))
+      .filter(({ shown }) => shown)
+      .map(({ item, shown }) => `<button type="button" role="menuitem" class="card-menu-item${item.danger ? " danger" : ""}" data-menu-action="${item.action}"><span>${t(shown.label)}</span><small>${t(shown.hint)}</small></button>`)
+      .join("");
+  }
 
   function close() {
     if (menu.hidden) return;
@@ -33,6 +42,7 @@ export function createCardMenu({ menu, cards, onAction }) {
     close();
     targetId = card.dataset.id || "";
     if (!targetId) return;
+    renderItems(targetId);
     card.classList.add("menu-open");
     menu.hidden = false;
     const { offsetWidth: width, offsetHeight: height } = menu;

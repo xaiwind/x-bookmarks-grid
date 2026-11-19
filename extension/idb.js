@@ -8,22 +8,35 @@ const SEEN_STORE = "seen";
 const PROJECT_STORE = "projects";
 const EMBEDDING_STORE = "embeddings";
 
-export async function saveDirectoryHandle(handle) {
+const DEFAULT_HANDLE_KEY = "vault";
+
+export async function saveDirectoryHandle(handle, key = DEFAULT_HANDLE_KEY) {
   const db = await openDb();
   try {
     const transaction = db.transaction(HANDLE_STORE, "readwrite");
-    transaction.objectStore(HANDLE_STORE).put(handle, "vault");
+    transaction.objectStore(HANDLE_STORE).put(handle, key);
     await transactionToPromise(transaction);
   } finally {
     db.close();
   }
 }
 
-export async function loadDirectoryHandle() {
+export async function loadDirectoryHandle(key = DEFAULT_HANDLE_KEY) {
   const db = await openDb();
   try {
-    const handle = await requestToPromise(db.transaction(HANDLE_STORE, "readonly").objectStore(HANDLE_STORE).get("vault"));
+    const handle = await requestToPromise(db.transaction(HANDLE_STORE, "readonly").objectStore(HANDLE_STORE).get(key));
     return handle || null;
+  } finally {
+    db.close();
+  }
+}
+
+export async function deleteDirectoryHandle(key = DEFAULT_HANDLE_KEY) {
+  const db = await openDb();
+  try {
+    const transaction = db.transaction(HANDLE_STORE, "readwrite");
+    transaction.objectStore(HANDLE_STORE).delete(key);
+    await transactionToPromise(transaction);
   } finally {
     db.close();
   }

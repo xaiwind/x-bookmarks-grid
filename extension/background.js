@@ -10,6 +10,7 @@ import { readPostLengthFromPage } from "./detail-reader.js";
 import { readPostTitleFromPage } from "./title-reader.js";
 import { importBundledBackupOnce } from "./bundled-backup.js";
 import { readPostMarkdownFromPage } from "./article-reader.js";
+import { readCapturedMedia, withPostHook } from "./post-media-reader.js";
 import { requestSyncCancel, runLibrarySync, saveCapturedTimeline } from "./library-sync-runner.js";
 import { shouldAutoSyncOnOpen, SYNC_ENGINE_VERSION } from "../src/sync-core.js";
 import { initLanguage, t, tr } from "../src/i18n.js";
@@ -221,11 +222,15 @@ async function readPostMarkdown(id) {
   const record = await findReadableRecord(id);
   const tabRef = { tab: null };
   try {
-    const tab = await openPostInTab(record, tabRef);
-    const result = await chrome.scripting.executeScript({ target: { tabId: tab.id }, func: readPostMarkdownFromPage, args: [String(record.id)] });
-    const detail = result?.[0]?.result;
-    if (!detail?.ok) return { ok: false, message: t(detail?.error || "没有读到正文") };
-    return { ok: true, title: String(detail.title || ""), markdown: String(detail.markdown || ""), isArticle: Boolean(detail.isArticle) };
+    const { result } = await withPostHook(async () => {
+      const tab = await openPostInTab(record, tabRef);
+      const injection = await chrome.scripting.executeScript({ target: { tabId: tab.id }, func: readPostMarkdownFromPage, args: [String(record.id), (record.imageUrls || []).length] });
+      const { media, layout, views } = await readCapturedMedia(tab.id, String(record.id));
+      return { detail: injection?.[0]?.result, media, layout, views };
+    });
+    const { detail, media, layout, views } = result;
+    if (!detail?.ok) return { ok: false, message: t(detail?.error || "没有读到正文"), media, layout, views };
+    return { ok: true, title: String(detail.title || ""), markdown: String(detail.markdown || ""), isArticle: Boolean(detail.isArticle), media, layout, views };
   } finally {
     if (tabRef.tab?.id) await chrome.tabs.remove(tabRef.tab.id).catch(() => {});
   }

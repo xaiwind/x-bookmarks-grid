@@ -49,7 +49,8 @@ test("the name and description are localised and every locale is packaged", () =
 
 test("the manifest asks only for what the extension uses", () => {
   assert.deepEqual(manifest.permissions, ["alarms", "scripting", "storage", "unlimitedStorage"]);
-  assert.deepEqual(manifest.host_permissions, ["https://x.com/*", "https://twitter.com/*"]);
+  // X pages, plus the image and video hosts that downloads save media from.
+  assert.deepEqual(manifest.host_permissions, ["https://x.com/*", "https://twitter.com/*", "https://pbs.twimg.com/*", "https://video.twimg.com/*"]);
   assert.equal("content_security_policy" in manifest, false);
 });
 

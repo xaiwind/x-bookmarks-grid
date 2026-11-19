@@ -115,7 +115,7 @@ export function countBookmarkTypes(records = []) {
 export function filterBookmarkRecords(records = [], filters = {}) {
   const terms = String(filters.query || "").trim().toLocaleLowerCase().split(/\s+/).filter(Boolean);
   const author = String(filters.author || "").trim().replace(/^@/, "").toLocaleLowerCase();
-  const { fromDate = "", toDate = "", hasLinks = "", type = "all" } = filters;
+  const { fromDate = "", toDate = "", hasLinks = "", downloaded = "", type = "all" } = filters;
   const minViews = Number(filters.minViews) || 0;
   return records.filter((record) => {
     if (!matchesBookmarkType(record, type)) return false;
@@ -126,6 +126,8 @@ export function filterBookmarkRecords(records = [], filters = {}) {
     const linkCount = (record.externalUrls || []).length;
     if (hasLinks === "yes" && !linkCount) return false;
     if (hasLinks === "no" && linkCount) return false;
+    if (downloaded === "yes" && !record.downloadedAt) return false;
+    if (downloaded === "no" && record.downloadedAt) return false;
     if (fromDate || toDate) {
       const dateKey = localDateKey(record.createdAt || record.syncedAt);
       if (!dateKey || (fromDate && dateKey < fromDate) || (toDate && dateKey > toDate)) return false;

@@ -35,6 +35,11 @@
             <option value="yes">包含外链</option>
             <option value="no">不含外链</option>
           </select>
+          <select id="downloaded" aria-label="下载状态筛选">
+            <option value="">下载状态</option>
+            <option value="no">未下载</option>
+            <option value="yes">已下载</option>
+          </select>
         </div>
       </div>
       <div class="toolbar-bottom-row">
@@ -50,6 +55,7 @@
           <button type="button" id="viralToggle" class="viral-toggle" aria-pressed="false" title="只看浏览量超过 100 万的收藏；可以和左边任意分类一起用">🔥 百万爆款 <small></small></button>
         </div>
         <div class="toolbar-actions-row">
+          <button type="button" id="downloadLocation" class="download-location" title="设置「下载文章」保存到哪个文件夹"><span aria-hidden="true">📁</span><span data-download-label>下载位置</span></button>
           <button id="exportBackup" title="把全部本地收藏导出成一个备份文件，用于换电脑或移动插件文件夹">导出备份</button>
           <button id="importBackup" title="从备份文件恢复收藏；只补充缺少的内容，不会覆盖或删除现有数据">导入备份</button>
           <input id="backupFile" type="file" accept="application/json,.json" hidden>
@@ -82,6 +88,43 @@
         <textarea id="editNote" rows="4" maxlength="2000" placeholder="为什么收藏、打算怎么用…"></textarea>
         <p id="editError" class="edit-error" aria-live="polite"></p>
         <div class="edit-actions"><button type="button" id="editCancel">取消</button><button type="submit" class="primary">保存</button></div>
+      </form>
+    </dialog>
+    <dialog id="downloadDialog" class="edit-dialog download-dialog" aria-labelledby="downloadHeading" aria-describedby="downloadIntro">
+      <form method="dialog">
+        <h2 id="downloadHeading">下载位置</h2>
+        <p id="downloadIntro" class="download-intro"></p>
+        <div class="download-current">
+          <span class="download-current-icon" aria-hidden="true">📁</span>
+          <div><strong id="downloadFolderName"></strong><small id="downloadFolderHint"></small></div>
+        </div>
+        <div class="download-choices">
+          <button type="button" id="downloadPick" class="primary">选择文件夹…</button>
+          <button type="button" id="downloadUseBrowser">改用浏览器默认下载</button>
+        </div>
+        <label class="download-option"><input type="checkbox" id="downloadByAuthor"><span>按作者分子文件夹<small>例如 alice/文章标题.md，方便在 Obsidian 里按作者浏览</small></span></label>
+        <label class="download-option"><input type="checkbox" id="downloadSaveMedia"><span>同时把图片和视频存到本地<small>存到文章旁边的 assets 文件夹，Markdown 改用本地路径，离线也能看</small></span></label>
+        <label class="download-option download-select"><span>已下载过的文章再次下载时<small>文件还在文件夹里时生效</small></span><select id="downloadDuplicate"><option value="ask">每次询问</option><option value="overwrite">直接覆盖为最新版本</option><option value="copy">另存一份</option></select></label>
+        <p id="downloadUnsupported" class="edit-help" hidden>当前浏览器不支持选择文件夹，文章会保存到浏览器的默认下载目录。</p>
+        <p id="downloadError" class="edit-error" aria-live="polite"></p>
+        <div class="edit-actions"><button type="button" id="downloadDone">完成</button></div>
+      </form>
+    </dialog>
+    <dialog id="duplicateDialog" class="edit-dialog duplicate-dialog" aria-labelledby="duplicateHeading" aria-describedby="duplicateNote">
+      <form method="dialog">
+        <h2 id="duplicateHeading">这篇已经下载过</h2>
+        <div class="download-current">
+          <span class="download-current-icon" aria-hidden="true">✓</span>
+          <div><strong id="duplicateTitle"></strong><small id="duplicateWhen"></small><small id="duplicateWhere"></small></div>
+        </div>
+        <p id="duplicateNote" class="download-intro duplicate-note"></p>
+        <label class="download-option"><input type="checkbox" id="duplicateRemember"><span>记住我的选择，以后不再询问<small>可以在工具栏「下载位置」里改回来</small></span></label>
+        <div class="edit-actions duplicate-actions">
+          <button type="button" id="duplicateCancel">取消</button>
+          <button type="button" id="duplicateCopy">另存一份</button>
+          <button type="button" id="duplicateOverwrite" class="primary">覆盖为最新版本</button>
+          <button type="button" id="duplicateAgain" class="primary">重新下载</button>
+        </div>
       </form>
     </dialog>
     <div id="toast" class="toast" role="status" aria-live="polite" hidden></div>

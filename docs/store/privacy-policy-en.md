@@ -1,6 +1,6 @@
 # X Bookmarks Grid — Privacy Policy
 
-Last updated: 16 November 2026
+Last updated: 19 November 2026
 
 X Bookmarks Grid ("the extension") is a browser extension that syncs your own X (Twitter) bookmarks into your browser and lets you browse, search and filter them. It is a third-party tool and is not affiliated with X Corp.
 
@@ -16,7 +16,7 @@ To work, the extension reads and stores the following in your browser:
 - What you enter in the extension: notes, edited titles and deletion marks.
 - Settings and sync state: the automatic sync switch and time, and the time and progress of the last sync.
 
-All of this is kept in the local storage of your current browser profile (IndexedDB and chrome.storage). The extension does not store post text. When you choose "Download", it temporarily reads that post's text and writes it into the Markdown file you download; the text is not kept in the extension.
+All of this is kept in the local storage of your current browser profile (IndexedDB and chrome.storage). The extension does not store post text. When you choose "Download", it temporarily reads that post's text and writes it into the Markdown file you download; the text is not kept in the extension. If "Also save photos and videos locally" is on, it downloads that post's photos and videos from X's media servers (pbs.twimg.com, video.twimg.com) into the folder you chose.
 
 ## How the extension accesses X
 

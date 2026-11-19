@@ -1,6 +1,7 @@
 import { displayTitle } from "../src/core.js";
 import { columnCountForWidth, formatCompactCount, getBookmarkPostType, isRecognizedArticle } from "../src/manager-core.js";
 import { t, tr } from "../src/i18n.js";
+import { describeDownloadMark, isDownloaded } from "../src/download-core.js";
 
 const MIN_COVER_RATIO = 0.62;
 const MAX_COVER_RATIO = 2.4;
@@ -46,6 +47,13 @@ function kickerLabel(record) {
   return t("收藏");
 }
 
+function downloadBadge(record) {
+  if (!isDownloaded(record)) return "";
+  const { when, location } = describeDownloadMark(record);
+  const detail = [when && tr`下载于 ${when}`, location].filter(Boolean).join("\n");
+  return `<span class="card-downloaded" title="${escapeHtml(detail || t("已下载"))}">✓ ${t("已下载")}</span>`;
+}
+
 export function cardTemplate(record) {
   const images = (record.imageUrls || []).map((url) => imageVariant(url, "small")).filter(Boolean);
   const title = displayTitle(record);
@@ -59,7 +67,7 @@ export function cardTemplate(record) {
     : "";
   return `<article class="bookmark-card tone-${tone}${images.length ? "" : " text-card"}" data-id="${escapeHtml(record.id)}">
     ${gallery}
-    <div class="card-content"><div class="card-kicker"><span>${escapeHtml(kickerLabel(record))}</span>${views ? `<span class="card-views">${escapeHtml(tr`${views} 次浏览`)}</span>` : ""}</div>
+    <div class="card-content"><div class="card-kicker"><span>${escapeHtml(kickerLabel(record))}</span>${views ? `<span class="card-views">${escapeHtml(tr`${views} 次浏览`)}</span>` : ""}${downloadBadge(record)}</div>
     <h3 class="card-title"><a href="${escapeHtml(url)}" target="_blank" rel="noreferrer">${escapeHtml(title)}</a></h3>${note ? `<p class="card-note">${escapeHtml(note)}</p>` : ""}
     <div class="card-footer"><span class="card-author"><button type="button" class="author-link" data-author="${escapeHtml(author)}" title="${escapeHtml(tr`只看 @${author} 的收藏`)}">@${escapeHtml(author)}</button><span class="card-date"> · ${escapeHtml(formatDate(record.createdAt || record.syncedAt))}</span></span><span class="card-buttons"><button type="button" class="card-more" aria-haspopup="menu" aria-label="${escapeHtml(tr`更多操作：${title}`)}" title="${t("更多操作（也可以右键卡片）")}">⋯</button><a class="card-open" href="${escapeHtml(url)}" target="_blank" rel="noreferrer" aria-label="${escapeHtml(tr`打开原帖：${title}`)}">↗</a></span></div></div>
   </article>`;
@@ -165,7 +173,7 @@ export function createMasonry(container, { batchSize = 48, gap = 18 } = {}) {
 
 /** Identifies what a card shows; a changed key means the card must be redrawn. */
 export function cardKey(record) {
-  return `${record.id}|${record.title}|${(record.imageUrls || [])[0] || ""}|${record.views || ""}|${record.textLength || ""}|${record.classificationVerified ? 1 : 0}|${record.note || ""}|${record.untitled ? 1 : 0}`;
+  return `${record.id}|${record.title}|${(record.imageUrls || [])[0] || ""}|${record.views || ""}|${record.textLength || ""}|${record.classificationVerified ? 1 : 0}|${record.note || ""}|${record.untitled ? 1 : 0}|${record.downloadedAt || ""}`;
 }
 
 function safePostUrl(value) {

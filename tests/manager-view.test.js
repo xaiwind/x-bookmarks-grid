@@ -1,6 +1,6 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { cardTemplate } from "../extension/manager-view.js";
+import { cardKey, cardTemplate } from "../extension/manager-view.js";
 
 const record = { id: "1", author: "bob", title: 'A "quoted" title', url: "https://x.com/bob/status/1", imageUrls: ["https://pbs.twimg.com/media/abc.jpg"] };
 
@@ -23,4 +23,12 @@ test("author options show the nickname with the handle, or just the handle when 
   const plain = authorLabel({ author: "bob" });
   assert.match(plain, /class="author-name">@bob</);
   assert.doesNotMatch(plain, /author-handle/);
+});
+
+test("downloaded posts show a badge with when and where, and redraw when the mark changes", () => {
+  const base = { id: "5", title: "t", author: "a", url: "https://x.com/a/status/5", imageUrls: [] };
+  assert.doesNotMatch(cardTemplate(base), /card-downloaded/);
+  const marked = { ...base, downloadedAt: "2026-11-18T10:00:00.000Z", download: { target: "folder", folder: "Vault", path: "a/t-5.md" } };
+  assert.match(cardTemplate(marked), /<span class="card-downloaded" title="[^"]*Vault \/ a \/ t-5\.md">✓ 已下载<\/span>/);
+  assert.notEqual(cardKey(base), cardKey(marked));
 });
