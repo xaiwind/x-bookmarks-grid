@@ -16,13 +16,13 @@ To work, the extension reads and stores the following in your browser:
 - What you enter in the extension: notes, edited titles and deletion marks.
 - Settings and sync state: the automatic sync switch and time, and the time and progress of the last sync.
 
-All of this is kept in the local storage of your current browser profile (IndexedDB and chrome.storage). The extension does not store post text. When you choose "Download", it temporarily reads that post's text and writes it into the Markdown file you download; the text is not kept in the extension. If "Also save photos and videos locally" is on, it downloads that post's photos and videos from X's media servers (pbs.twimg.com, video.twimg.com) into the folder you chose.
+All of this is kept in the local storage of your current browser profile (IndexedDB and chrome.storage). The extension does not store post text. When you choose "Download", it temporarily reads that post's text and writes it into a Markdown file saved to the folder you chose or to your browser's downloads; the text is not kept in the extension. If "Also save photos and videos locally" is on, it downloads that post's photos and videos from X's media servers (pbs.twimg.com, video.twimg.com) into the folder you chose.
 
 ## How the extension accesses X
 
 - The extension uses the X session you are already signed in to in your browser, and reads your own bookmark list and the posts you point it at from within X's pages. These requests go only to X's website (x.com / twitter.com).
 - The extension does not read or store your password or cookies, and it never posts, likes, follows or changes your bookmarks on your behalf.
-- The extension does not access any site other than X. Cover images are loaded by your browser directly from X's image servers.
+- The extension does not access any site other than X. Cover images are loaded by your browser directly from X's image servers, and photos and videos you choose to save are downloaded only from X's media servers.
 
 ## Retention and deletion
 

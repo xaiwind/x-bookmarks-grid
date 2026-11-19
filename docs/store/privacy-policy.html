@@ -33,12 +33,12 @@
   <li>What you enter in the extension: notes, edited titles and deletion marks.</li>
   <li>Settings and sync state: the automatic sync switch and time, and the time and progress of the last sync.</li>
 </ul>
-<p>All of this is kept in the local storage of your current browser profile (IndexedDB and chrome.storage). The extension does not store post text. When you choose "Download", it temporarily reads that post's text and writes it into the Markdown file you download; the text is not kept in the extension. If "Also save photos and videos locally" is on, it downloads that post's photos and videos from X's media servers (pbs.twimg.com, video.twimg.com) into the folder you chose.</p>
+<p>All of this is kept in the local storage of your current browser profile (IndexedDB and chrome.storage). The extension does not store post text. When you choose "Download", it temporarily reads that post's text and writes it into a Markdown file saved to the folder you chose or to your browser's downloads; the text is not kept in the extension. If "Also save photos and videos locally" is on, it downloads that post's photos and videos from X's media servers (pbs.twimg.com, video.twimg.com) into the folder you chose.</p>
 <h3>How the extension accesses X</h3>
 <ul>
   <li>The extension uses the X session you are already signed in to in your browser, and reads your own bookmark list and the posts you point it at from within X's pages. These requests go only to X's website (x.com / twitter.com).</li>
   <li>The extension does not read or store your password or cookies, and it never posts, likes, follows or changes your bookmarks on your behalf.</li>
-  <li>The extension does not access any site other than X. Cover images are loaded by your browser directly from X's image servers.</li>
+  <li>The extension does not access any site other than X. Cover images are loaded by your browser directly from X's image servers, and photos and videos you choose to save are downloaded only from X's media servers.</li>
 </ul>
 <h3>Retention and deletion</h3>
 <ul>
@@ -67,12 +67,12 @@
   <li>你在插件里填写的内容：备注、修改过的标题、删除标记。</li>
   <li>插件设置和同步状态：自动同步开关与时间、上次同步时间和进度。</li>
 </ul>
-<p>这些数据全部保存在你当前浏览器配置的本地存储（IndexedDB 和 chrome.storage）中。本插件不保存帖子正文。当你选择“下载文章”时，插件会临时读取该帖子的正文并写入你下载的 Markdown 文件，正文不会留在插件里。如果你开启了“同时把图片和视频存到本地”，插件会从 X 的图片和视频服务器（pbs.twimg.com、video.twimg.com）下载这条帖子的图片和视频，保存到你选择的文件夹。</p>
+<p>这些数据全部保存在你当前浏览器配置的本地存储（IndexedDB 和 chrome.storage）中。本插件不保存帖子正文。当你选择“下载文章”时，插件会临时读取该帖子的正文并写入 Markdown 文件，保存到你选择的文件夹或浏览器的下载目录，正文不会留在插件里。如果你开启了“同时把图片和视频存到本地”，插件会从 X 的图片和视频服务器（pbs.twimg.com、video.twimg.com）下载这条帖子的图片和视频，保存到你选择的文件夹。</p>
 <h3>本插件如何访问 X</h3>
 <ul>
   <li>本插件使用你浏览器中已登录的 X 会话，在 X 的页面内读取你自己的收藏列表和你指定的帖子。相关请求只发往 X 的网站（x.com / twitter.com）。</li>
   <li>本插件不读取、不保存你的密码或 Cookie，也不会替你发帖、点赞、关注或修改收藏。</li>
-  <li>本插件不访问 X 以外的任何网站。封面图片由浏览器直接从 X 的图片服务器加载。</li>
+  <li>本插件不访问 X 以外的任何网站。封面图片由浏览器直接从 X 的图片服务器加载，你选择保存的图片和视频也只从 X 的媒体服务器下载。</li>
 </ul>
 <h3>数据的保留与删除</h3>
 <ul>
